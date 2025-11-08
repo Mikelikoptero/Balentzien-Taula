@@ -43,21 +43,27 @@
             width: 100%;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: var(--text-color);
-        }
-
-        .header p {
-            color: var(--text-muted);
-            max-width: 600px;
+        .tables-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .table-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-bottom: 2px solid var(--border-color);
         }
 
         /* Barra de búsqueda */
@@ -102,8 +108,7 @@
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             border: 1px solid rgba(58,121,94,0.2);
-            margin: 0 auto;
-            max-width: 1000px;
+            min-height: 400px;
         }
 
         .valence-cell {
@@ -257,6 +262,11 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .tables-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
             .valences-table {
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             }
@@ -289,17 +299,26 @@
 <body>
     <div class="onddi-title">ONDDI AKADEMIA</div>
     
-    <div class="header">
-        <h1>Balentzien Taula</h1>
-        <p>Elementu kimikoen balentziak. Hautatu elementu bat klik eginez informazioa ikusteko.</p>
-    </div>
-
     <div class="search-container">
         <input type="text" class="search-box" id="searchInput" placeholder="Bilatu elementua... (izenaz edo sinboloaz)">
     </div>
 
-    <div class="valences-table" id="valencesTable">
-        <!-- Las celdas se generarán con JavaScript -->
+    <div class="tables-container">
+        <!-- Tabla de Metales -->
+        <div class="table-section">
+            <h2 class="section-title">METALAK</h2>
+            <div class="valences-table" id="metalsTable">
+                <!-- Las celdas se generarán con JavaScript -->
+            </div>
+        </div>
+
+        <!-- Tabla de Ez-Metalak -->
+        <div class="table-section">
+            <h2 class="section-title">EZ METALAK</h2>
+            <div class="valences-table" id="nonmetalsTable">
+                <!-- Las celdas se generarán con JavaScript -->
+            </div>
+        </div>
     </div>
 
     <div class="zoom-controls">
@@ -310,8 +329,8 @@
     </div>
 
     <script>
-        // Datos de elementos con valencias (solo los solicitados)
-        const elements = [
+        // Datos de elementos con valencias
+        const metals = [
             {z:3,sym:'Li',name:'Litioa',val:[1]},
             {z:11,sym:'Na',name:'Sodioa',val:[1]},
             {z:19,sym:'K',name:'Potasioa',val:[1]},
@@ -338,7 +357,10 @@
             {z:28,sym:'Ni',name:'Nikela',val:[2,3]},
             {z:50,sym:'Sn',name:'Eztainua',val:[2,4]},
             {z:82,sym:'Pb',name:'Beruna',val:[2,4]},
-            {z:78,sym:'Pt',name:'Platinoa',val:[2,4]},
+            {z:78,sym:'Pt',name:'Platinoa',val:[2,4]}
+        ];
+
+        const nonmetals = [
             {z:1,sym:'H',name:'Hidrogenoa',val:[-1,1]},
             {z:9,sym:'F',name:'Fluorra',val:[-1]},
             {z:17,sym:'Cl',name:'Kloroa',val:[-1,1,3,5,7]},
@@ -358,15 +380,18 @@
             {z:14,sym:'Si',name:'Silizioa',val:[-4,4]}
         ];
 
-        const valencesTable = document.getElementById('valencesTable');
+        const metalsTable = document.getElementById('metalsTable');
+        const nonmetalsTable = document.getElementById('nonmetalsTable');
         const searchInput = document.getElementById('searchInput');
         let allCells = [];
 
-        // Crear las celdas de la tabla
-        elements.forEach(el => {
+        // Función para crear celdas
+        function createCell(el, container) {
             const cell = document.createElement('div');
             cell.className = 'valence-cell';
             cell.dataset.z = el.z;
+            cell.dataset.name = el.name.toLowerCase();
+            cell.dataset.sym = el.sym.toLowerCase();
             
             // Crear elementos de valencia
             let valencesHTML = '';
@@ -390,49 +415,41 @@
                 ${valencesHTML}
             `;
             
-            // Añadir evento de clic para mostrar información
+            // Añadir evento de clic
             cell.addEventListener('click', () => {
-                // Remover clase activa de todas las celdas
                 allCells.forEach(c => c.classList.remove('highlighted'));
-                // Añadir clase activa a la celda clickeada
                 cell.classList.add('highlighted');
-                
-                // Mostrar información en consola (podrías mostrar un modal aquí)
-                console.log(`${el.name} (${el.sym}): ${el.val.join(', ')}`);
             });
             
-            valencesTable.appendChild(cell);
+            container.appendChild(cell);
             allCells.push(cell);
-        });
+        }
+
+        // Crear celdas para metales
+        metals.forEach(el => createCell(el, metalsTable));
+
+        // Crear celdas para ez-metalak
+        nonmetals.forEach(el => createCell(el, nonmetalsTable));
 
         // Funcionalidad de búsqueda
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase().trim();
             
             allCells.forEach(cell => {
-                const z = parseInt(cell.dataset.z);
-                const element = elements.find(el => el.z === z);
+                const matches = cell.dataset.name.includes(searchTerm) ||
+                               cell.dataset.sym.includes(searchTerm);
                 
-                if (element) {
-                    const matches = element.name.toLowerCase().includes(searchTerm) ||
-                                   element.sym.toLowerCase().includes(searchTerm);
-                    
-                    // Remover clases anteriores de búsqueda
-                    cell.classList.remove('search-match', 'search-nomatch');
-                    
-                    if (searchTerm === '') {
-                        // Sin término de búsqueda - mostrar todo normalmente
-                        cell.style.opacity = '';
-                        cell.style.filter = '';
-                        cell.style.transform = '';
-                        cell.style.border = '';
-                    } else if (matches) {
-                        // Coincidencia encontrada - resaltarla
-                        cell.classList.add('search-match');
-                    } else {
-                        // Sin coincidencia - atenuarla
-                        cell.classList.add('search-nomatch');
-                    }
+                cell.classList.remove('search-match', 'search-nomatch');
+                
+                if (searchTerm === '') {
+                    cell.style.opacity = '';
+                    cell.style.filter = '';
+                    cell.style.transform = '';
+                    cell.style.border = '';
+                } else if (matches) {
+                    cell.classList.add('search-match');
+                } else {
+                    cell.classList.add('search-nomatch');
                 }
             });
         });
