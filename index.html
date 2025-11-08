@@ -15,7 +15,7 @@
             --cell-width: 125px;
             --cell-height: 85px;
             --gap-size: 8px;
-            --zoom-level: 1; /* Variable para el zoom */
+            --zoom-level: 1;
         }
 
         * {
@@ -31,7 +31,7 @@
             line-height: 1.6;
             padding: 20px;
             min-height: 100vh;
-            transform: scale(var(--zoom-level)); /* Aplicar zoom al body */
+            transform: scale(var(--zoom-level));
             transform-origin: top center;
             transition: transform 0.2s ease;
         }
@@ -136,7 +136,7 @@
             justify-content: space-between;
             font-size: 12px;
             border: 1px solid rgba(58,121,94,0.1);
-            cursor: pointer;
+            cursor: default;
             transition: all 0.3s ease;
             width: var(--cell-width);
             height: var(--cell-height);
@@ -219,13 +219,6 @@
             opacity: 0.2;
             filter: grayscale(0.8);
             transform: scale(0.9);
-        }
-
-        .valence-cell.highlighted {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(58,121,94,0.5);
-            z-index: 10;
-            border-color: rgba(58,121,94,0.4);
         }
 
         /* Controles de zoom */
@@ -498,12 +491,7 @@
                 ${valencesHTML}
             `;
             
-            // Añadir evento de clic
-            cell.addEventListener('click', () => {
-                allCells.forEach(c => c.classList.remove('highlighted'));
-                cell.classList.add('highlighted');
-            });
-            
+            // Eliminado el evento de clic para evitar la selección
             allCells.push(cell);
             return cell;
         }
@@ -537,7 +525,7 @@
             });
         });
 
-        // Funcionalidad de zoom - CORREGIDA
+        // Funcionalidad de zoom
         let zoomLevel = 1;
         const minZoom = 0.5;
         const maxZoom = 2;
