@@ -46,7 +46,7 @@
         .tables-container {
             display: flex;
             gap: 30px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -64,6 +64,17 @@
             margin-bottom: 20px;
             padding: 10px;
             border-bottom: 2px solid var(--border-color);
+        }
+
+        .group-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 20px 0 10px 0;
+            padding: 8px 12px;
+            background: rgba(58,121,94,0.1);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
         }
 
         /* Barra de búsqueda */
@@ -100,15 +111,21 @@
 
         /* Tabla de valencias */
         .valences-table {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(var(--cell-size), 1fr));
-            gap: var(--gap-size);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             padding: 20px;
             background: linear-gradient(180deg, #111111, #151515);
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             border: 1px solid rgba(58,121,94,0.2);
             min-height: 400px;
+        }
+
+        .elements-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(var(--cell-size), 1fr));
+            gap: var(--gap-size);
         }
 
         .valence-cell {
@@ -267,7 +284,7 @@
                 gap: 20px;
             }
             
-            .valences-table {
+            .elements-group {
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             }
             
@@ -281,9 +298,8 @@
         }
 
         @media (max-width: 480px) {
-            .valences-table {
+            .elements-group {
                 grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-                padding: 10px;
             }
             
             .valence-cell .sym {
@@ -308,7 +324,7 @@
         <div class="table-section">
             <h2 class="section-title">METALAK</h2>
             <div class="valences-table" id="metalsTable">
-                <!-- Las celdas se generarán con JavaScript -->
+                <!-- Los grupos se generarán con JavaScript -->
             </div>
         </div>
 
@@ -316,7 +332,7 @@
         <div class="table-section">
             <h2 class="section-title">EZ METALAK</h2>
             <div class="valences-table" id="nonmetalsTable">
-                <!-- Las celdas se generarán con JavaScript -->
+                <!-- Los grupos se generarán con JavaScript -->
             </div>
         </div>
     </div>
@@ -329,64 +345,106 @@
     </div>
 
     <script>
-        // Datos de elementos con valencias
-        const metals = [
-            {z:3,sym:'Li',name:'Litioa',val:[1]},
-            {z:11,sym:'Na',name:'Sodioa',val:[1]},
-            {z:19,sym:'K',name:'Potasioa',val:[1]},
-            {z:37,sym:'Rb',name:'Rubidioa',val:[1]},
-            {z:55,sym:'Cs',name:'Zesioa',val:[1]},
-            {z:87,sym:'Fr',name:'Frantzioa',val:[1]},
-            {z:47,sym:'Ag',name:'Zilarra',val:[1]},
-            {z:4,sym:'Be',name:'Berilioa',val:[2]},
-            {z:12,sym:'Mg',name:'Magnesioa',val:[2]},
-            {z:20,sym:'Ca',name:'Kaltzioa',val:[2]},
-            {z:38,sym:'Sr',name:'Estrontzioa',val:[2]},
-            {z:56,sym:'Ba',name:'Barioa',val:[2]},
-            {z:88,sym:'Ra',name:'Radioa',val:[2]},
-            {z:30,sym:'Zn',name:'Zinka',val:[2]},
-            {z:48,sym:'Cd',name:'Kadmioa',val:[2]},
-            {z:13,sym:'Al',name:'Aluminioa',val:[3]},
-            {z:29,sym:'Cu',name:'Kobrea',val:[1,2]},
-            {z:80,sym:'Hg',name:'Merkurioa',val:[1,2]},
-            {z:79,sym:'Au',name:'Urrea',val:[1,3]},
-            {z:24,sym:'Cr',name:'Kromoa',val:[2,3,6]},
-            {z:25,sym:'Mn',name:'Manganesoa',val:[2,3,4,6,7]},
-            {z:26,sym:'Fe',name:'Burdina',val:[2,3]},
-            {z:27,sym:'Co',name:'Kobaltoa',val:[2,3]},
-            {z:28,sym:'Ni',name:'Nikela',val:[2,3]},
-            {z:50,sym:'Sn',name:'Eztainua',val:[2,4]},
-            {z:82,sym:'Pb',name:'Beruna',val:[2,4]},
-            {z:78,sym:'Pt',name:'Platinoa',val:[2,4]}
-        ];
+        // Datos de elementos organizados por grupos
+        const metalGroups = {
+            "Metal Alkalinoak (+1)": [
+                {z:3,sym:'Li',name:'Litioa',val:[1]},
+                {z:11,sym:'Na',name:'Sodioa',val:[1]},
+                {z:19,sym:'K',name:'Potasioa',val:[1]},
+                {z:37,sym:'Rb',name:'Rubidioa',val:[1]},
+                {z:55,sym:'Cs',name:'Zesioa',val:[1]},
+                {z:87,sym:'Fr',name:'Frantzioa',val:[1]}
+            ],
+            "Metal Alkalino Lurraldekoak (+2)": [
+                {z:4,sym:'Be',name:'Berilioa',val:[2]},
+                {z:12,sym:'Mg',name:'Magnesioa',val:[2]},
+                {z:20,sym:'Ca',name:'Kaltzioa',val:[2]},
+                {z:38,sym:'Sr',name:'Estrontzioa',val:[2]},
+                {z:56,sym:'Ba',name:'Barioa',val:[2]},
+                {z:88,sym:'Ra',name:'Radioa',val:[2]}
+            ],
+            "Trantsizio Metalak (+1)": [
+                {z:47,sym:'Ag',name:'Zilarra',val:[1]},
+                {z:29,sym:'Cu',name:'Kobrea',val:[1,2]},
+                {z:79,sym:'Au',name:'Urrea',val:[1,3]}
+            ],
+            "Trantsizio Metalak (+2)": [
+                {z:30,sym:'Zn',name:'Zinka',val:[2]},
+                {z:48,sym:'Cd',name:'Kadmioa',val:[2]},
+                {z:80,sym:'Hg',name:'Merkurioa',val:[1,2]},
+                {z:26,sym:'Fe',name:'Burdina',val:[2,3]},
+                {z:27,sym:'Co',name:'Kobaltoa',val:[2,3]},
+                {z:28,sym:'Ni',name:'Nikela',val:[2,3]}
+            ],
+            "Trantsizio Metalak Anitzak": [
+                {z:24,sym:'Cr',name:'Kromoa',val:[2,3,6]},
+                {z:25,sym:'Mn',name:'Manganesoa',val:[2,3,4,6,7]},
+                {z:78,sym:'Pt',name:'Platinoa',val:[2,4]}
+            ],
+            "Beste Metalak": [
+                {z:13,sym:'Al',name:'Aluminioa',val:[3]},
+                {z:50,sym:'Sn',name:'Eztainua',val:[2,4]},
+                {z:82,sym:'Pb',name:'Beruna',val:[2,4]}
+            ]
+        };
 
-        const nonmetals = [
-            {z:1,sym:'H',name:'Hidrogenoa',val:[-1,1]},
-            {z:9,sym:'F',name:'Fluorra',val:[-1]},
-            {z:17,sym:'Cl',name:'Kloroa',val:[-1,1,3,5,7]},
-            {z:35,sym:'Br',name:'Bromoa',val:[-1,1,3,5,7]},
-            {z:53,sym:'I',name:'Iodoa',val:[-1,1,3,5,7]},
-            {z:8,sym:'O',name:'Oxigenoa',val:[-2,-1]},
-            {z:16,sym:'S',name:'Sufrea',val:[-2,2,4,6]},
-            {z:34,sym:'Se',name:'Selenioa',val:[-2,2,4,6]},
-            {z:52,sym:'Te',name:'Telurioa',val:[-2,2,4,6]},
-            {z:7,sym:'N',name:'Nitrogenoa',val:[-3,1,3,5]},
-            {z:15,sym:'P',name:'Fosforoa',val:[-3,3,5]},
-            {z:33,sym:'As',name:'Artsenikoa',val:[-3,3,5]},
-            {z:51,sym:'Sb',name:'Antimonioa',val:[-3,3,5]},
-            {z:5,sym:'B',name:'Boroa',val:[3]},
-            {z:83,sym:'Bi',name:'Bismutoa',val:[3,5]},
-            {z:6,sym:'C',name:'Karbonoa',val:[-4,2,4]},
-            {z:14,sym:'Si',name:'Silizioa',val:[-4,4]}
-        ];
+        const nonmetalGroups = {
+            "Gasak eta Ez-Metal Arinak": [
+                {z:1,sym:'H',name:'Hidrogenoa',val:[-1,1]},
+                {z:7,sym:'N',name:'Nitrogenoa',val:[-3,1,3,5]},
+                {z:8,sym:'O',name:'Oxigenoa',val:[-2,-1]}
+            ],
+            "Halogenoak (-1)": [
+                {z:9,sym:'F',name:'Fluorra',val:[-1]},
+                {z:17,sym:'Cl',name:'Kloroa',val:[-1,1,3,5,7]},
+                {z:35,sym:'Br',name:'Bromoa',val:[-1,1,3,5,7]},
+                {z:53,sym:'I',name:'Iodoa',val:[-1,1,3,5,7]}
+            ],
+            "Kalkogenoak (-2)": [
+                {z:16,sym:'S',name:'Sufrea',val:[-2,2,4,6]},
+                {z:34,sym:'Se',name:'Selenioa',val:[-2,2,4,6]},
+                {z:52,sym:'Te',name:'Telurioa',val:[-2,2,4,6]}
+            ],
+            "Pnictogenoak (-3)": [
+                {z:15,sym:'P',name:'Fosforoa',val:[-3,3,5]},
+                {z:33,sym:'As',name:'Artsenikoa',val:[-3,3,5]},
+                {z:51,sym:'Sb',name:'Antimonioa',val:[-3,3,5]},
+                {z:83,sym:'Bi',name:'Bismutoa',val:[3,5]}
+            ],
+            "Tetragenoak (-4)": [
+                {z:6,sym:'C',name:'Karbonoa',val:[-4,2,4]},
+                {z:14,sym:'Si',name:'Silizioa',val:[-4,4]}
+            ],
+            "Metaloideak": [
+                {z:5,sym:'B',name:'Boroa',val:[3]}
+            ]
+        };
 
         const metalsTable = document.getElementById('metalsTable');
         const nonmetalsTable = document.getElementById('nonmetalsTable');
         const searchInput = document.getElementById('searchInput');
         let allCells = [];
 
+        // Función para crear grupos de elementos
+        function createGroup(groupName, elements, container) {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'elements-group';
+            
+            const title = document.createElement('div');
+            title.className = 'group-title';
+            title.textContent = groupName;
+            container.appendChild(title);
+            
+            elements.forEach(el => {
+                const cell = createCell(el);
+                groupDiv.appendChild(cell);
+            });
+            
+            container.appendChild(groupDiv);
+        }
+
         // Función para crear celdas
-        function createCell(el, container) {
+        function createCell(el) {
             const cell = document.createElement('div');
             cell.className = 'valence-cell';
             cell.dataset.z = el.z;
@@ -421,15 +479,19 @@
                 cell.classList.add('highlighted');
             });
             
-            container.appendChild(cell);
             allCells.push(cell);
+            return cell;
         }
 
-        // Crear celdas para metales
-        metals.forEach(el => createCell(el, metalsTable));
+        // Crear grupos para metales
+        Object.entries(metalGroups).forEach(([groupName, elements]) => {
+            createGroup(groupName, elements, metalsTable);
+        });
 
-        // Crear celdas para ez-metalak
-        nonmetals.forEach(el => createCell(el, nonmetalsTable));
+        // Crear grupos para ez-metalak
+        Object.entries(nonmetalGroups).forEach(([groupName, elements]) => {
+            createGroup(groupName, elements, nonmetalsTable);
+        });
 
         // Funcionalidad de búsqueda
         searchInput.addEventListener('input', function() {
