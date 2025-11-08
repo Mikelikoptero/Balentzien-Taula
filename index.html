@@ -12,7 +12,7 @@
             --text-muted: #cccccc;
             --border-color: rgba(58,121,94,0.3);
             --cell-bg: rgba(30,30,30,0.8);
-            --cell-width: 80px;
+            --cell-width: 85px;
             --cell-height: 110px;
             --gap-size: 8px;
         }
@@ -57,11 +57,11 @@
         }
 
         .table-section.metals {
-            flex: 1.5; /* Más estrecho para metales */
+            flex: 1.5;
         }
 
         .table-section.nonmetals {
-            flex: 2; /* Más ancho para no metales */
+            flex: 2;
         }
 
         .section-title {
@@ -158,7 +158,7 @@
         }
 
         .valence-cell .sym {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 400;
             line-height: 1;
             letter-spacing: -0.02em;
@@ -168,7 +168,7 @@
         }
 
         .valence-cell .ename {
-            font-size: 10px;
+            font-size: 11px;
             opacity: 0.95;
             line-height: 1.05;
             margin-top: 3px;
@@ -182,20 +182,20 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 3px;
+            gap: 4px;
             margin-top: 8px;
-            min-height: 30px;
+            min-height: 32px;
             align-content: flex-start;
         }
 
         .valence {
             background: rgba(58,121,94,0.2);
             border-radius: 4px;
-            padding: 2px 4px;
-            font-size: 9px;
+            padding: 3px 6px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-color);
-            min-width: 16px;
+            min-width: 20px;
             text-align: center;
             line-height: 1.2;
         }
@@ -308,8 +308,28 @@
 
         @media (max-width: 768px) {
             .valence-cell {
-                width: 70px;
-                height: 95px;
+                width: 75px;
+                height: 100px;
+            }
+            
+            .valence-cell .sym {
+                font-size: 22px;
+            }
+            
+            .valence-cell .ename {
+                font-size: 10px;
+            }
+            
+            .valence {
+                font-size: 10px;
+                padding: 2px 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .valence-cell {
+                width: 65px;
+                height: 90px;
             }
             
             .valence-cell .sym {
@@ -319,20 +339,10 @@
             .valence-cell .ename {
                 font-size: 9px;
             }
-        }
-
-        @media (max-width: 480px) {
-            .valence-cell {
-                width: 60px;
-                height: 85px;
-            }
             
-            .valence-cell .sym {
-                font-size: 18px;
-            }
-            
-            .valence-cell .ename {
-                font-size: 8px;
+            .valence {
+                font-size: 9px;
+                padding: 2px 4px;
             }
         }
     </style>
