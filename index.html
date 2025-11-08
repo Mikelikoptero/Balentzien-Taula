@@ -12,8 +12,9 @@
             --text-muted: #cccccc;
             --border-color: rgba(58,121,94,0.3);
             --cell-bg: rgba(30,30,30,0.8);
-            --cell-size: 90px;
-            --gap-size: 10px;
+            --cell-width: 85px;
+            --cell-height: 100px;
+            --gap-size: 8px;
         }
 
         * {
@@ -45,8 +46,8 @@
 
         .tables-container {
             display: flex;
-            gap: 30px;
-            max-width: 1800px;
+            gap: 25px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -56,11 +57,11 @@
         }
 
         .table-section.metals {
-            flex: 2; /* Más ancho para metales */
+            flex: 2;
         }
 
         .table-section.nonmetals {
-            flex: 1; /* Menos ancho para no metales */
+            flex: 1;
         }
 
         .section-title {
@@ -84,14 +85,14 @@
         .search-container {
             margin-bottom: 20px;
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             margin-left: auto;
             margin-right: auto;
         }
 
         .search-box {
             width: 100%;
-            padding: 14px 18px;
+            padding: 12px 16px;
             background: rgba(30,30,30,0.8);
             border: 1px solid var(--border-color);
             border-radius: 10px;
@@ -116,13 +117,13 @@
         .valences-table {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            padding: 20px;
+            gap: 12px;
+            padding: 15px;
             background: linear-gradient(180deg, #111111, #151515);
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             border: 1px solid rgba(58,121,94,0.2);
-            min-height: 400px;
+            min-height: 350px;
         }
 
         .elements-group {
@@ -145,8 +146,8 @@
             border: 1px solid rgba(58,121,94,0.1);
             cursor: pointer;
             transition: all 0.3s ease;
-            width: var(--cell-size);
-            height: var(--cell-size);
+            width: var(--cell-width);
+            height: var(--cell-height);
             flex-shrink: 0;
             box-sizing: border-box;
         }
@@ -157,7 +158,7 @@
         }
 
         .valence-cell .sym {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 400;
             line-height: 1;
             letter-spacing: -0.02em;
@@ -181,18 +182,18 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 4px;
-            margin-top: 6px;
+            gap: 3px;
+            margin-top: 8px;
         }
 
         .valence {
             background: rgba(58,121,94,0.2);
             border-radius: 4px;
-            padding: 2px 6px;
+            padding: 2px 5px;
             font-size: 10px;
             font-weight: 600;
             color: var(--text-color);
-            min-width: 20px;
+            min-width: 18px;
             text-align: center;
         }
 
@@ -304,8 +305,8 @@
 
         @media (max-width: 768px) {
             .valence-cell {
-                width: 80px;
-                height: 80px;
+                width: 75px;
+                height: 90px;
             }
             
             .valence-cell .sym {
@@ -319,8 +320,8 @@
 
         @media (max-width: 480px) {
             .valence-cell {
-                width: 70px;
-                height: 70px;
+                width: 65px;
+                height: 80px;
             }
             
             .valence-cell .sym {
