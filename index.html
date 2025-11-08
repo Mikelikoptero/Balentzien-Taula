@@ -12,8 +12,8 @@
             --text-muted: #cccccc;
             --border-color: rgba(58,121,94,0.3);
             --cell-bg: rgba(30,30,30,0.8);
-            --cell-width: 85px;
-            --cell-height: 130px;
+            --cell-width: 100px;
+            --cell-height: 120px;
             --gap-size: 8px;
         }
 
@@ -35,7 +35,7 @@
         .tables-container {
             display: flex;
             gap: 20px;
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -45,11 +45,11 @@
         }
 
         .table-section.metals {
-            flex: 2; /* Más ancho para metales */
+            flex: 2;
         }
 
         .table-section.nonmetals {
-            flex: 1.2; /* Más estrecho para no metales */
+            flex: 1.2;
         }
 
         .section-title {
@@ -168,12 +168,12 @@
 
         .valence-cell .valences {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             justify-content: center;
             gap: 4px;
             margin-top: 8px;
-            min-height: 35px;
-            align-content: flex-start;
+            min-height: 25px;
+            align-items: center;
         }
 
         .valence {
@@ -186,6 +186,7 @@
             min-width: 20px;
             text-align: center;
             line-height: 1.2;
+            white-space: nowrap;
         }
 
         .valence.positive {
@@ -277,10 +278,17 @@
         }
 
         /* Responsive */
+        @media (max-width: 1600px) {
+            .tables-container {
+                max-width: 1500px;
+            }
+        }
+
         @media (max-width: 1200px) {
             .tables-container {
                 flex-direction: column;
                 gap: 20px;
+                max-width: 1200px;
             }
             
             .table-section.metals,
@@ -296,7 +304,7 @@
 
         @media (max-width: 768px) {
             .valence-cell {
-                width: 75px;
+                width: 90px;
                 height: 110px;
             }
             
@@ -316,7 +324,7 @@
 
         @media (max-width: 480px) {
             .valence-cell {
-                width: 65px;
+                width: 80px;
                 height: 100px;
             }
             
