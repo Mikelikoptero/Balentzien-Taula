@@ -13,8 +13,9 @@
             --border-color: rgba(58,121,94,0.3);
             --cell-bg: rgba(30,30,30,0.8);
             --cell-width: 125px;
-            --cell-height: 85px; /* Reducida de 105px */
+            --cell-height: 85px;
             --gap-size: 8px;
+            --zoom-level: 1; /* Variable para el zoom */
         }
 
         * {
@@ -30,6 +31,9 @@
             line-height: 1.6;
             padding: 20px;
             min-height: 100vh;
+            transform: scale(var(--zoom-level)); /* Aplicar zoom al body */
+            transform-origin: top center;
+            transition: transform 0.2s ease;
         }
 
         .tables-container {
@@ -125,7 +129,7 @@
         .valence-cell {
             background: var(--cell-bg);
             border-radius: 6px;
-            padding: 6px 4px; /* Reducido de 8px 6px */
+            padding: 6px 4px;
             color: var(--text-color);
             display: flex;
             flex-direction: column;
@@ -167,7 +171,7 @@
             justify-content: center;
             gap: 4px;
             margin-top: 8px;
-            min-height: 20px; /* Reducido de 25px */
+            min-height: 20px;
             align-items: center;
         }
 
@@ -300,7 +304,7 @@
         @media (max-width: 768px) {
             .valence-cell {
                 width: 90px;
-                height: 90px; /* Ajustado de 110px */
+                height: 90px;
             }
             
             .valence-cell .sym {
@@ -320,7 +324,7 @@
         @media (max-width: 480px) {
             .valence-cell {
                 width: 80px;
-                height: 80px; /* Ajustado de 100px */
+                height: 80px;
             }
             
             .valence-cell .sym {
@@ -533,14 +537,15 @@
             });
         });
 
-        // Funcionalidad de zoom
+        // Funcionalidad de zoom - CORREGIDA
         let zoomLevel = 1;
         const minZoom = 0.5;
         const maxZoom = 2;
-        const zoomStep = 0.05;
+        const zoomStep = 0.1;
 
         function updateZoom() {
             document.documentElement.style.setProperty('--zoom-level', zoomLevel);
+            document.body.style.transform = `scale(${zoomLevel})`;
             document.getElementById('zoomLevel').textContent = Math.round(zoomLevel * 100) + '%';
         }
 
