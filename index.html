@@ -46,14 +46,21 @@
         .tables-container {
             display: flex;
             gap: 30px;
-            max-width: 1400px;
+            max-width: 1800px;
             margin: 0 auto;
         }
 
         .table-section {
-            flex: 1;
             display: flex;
             flex-direction: column;
+        }
+
+        .table-section.metals {
+            flex: 2; /* Más ancho para metales */
+        }
+
+        .table-section.nonmetals {
+            flex: 1; /* Menos ancho para no metales */
         }
 
         .section-title {
@@ -120,9 +127,22 @@
 
         .elements-group {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(var(--cell-size), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(var(--cell-size), 1fr));
             gap: var(--gap-size);
+            width: 100%;
         }
+
+        /* Asegurar que todos los grupos tengan una sola fila */
+        .elements-group.metals-group-1 { grid-template-columns: repeat(7, minmax(var(--cell-size), 1fr)); }
+        .elements-group.metals-group-2 { grid-template-columns: repeat(8, minmax(var(--cell-size), 1fr)); }
+        .elements-group.metals-group-3 { grid-template-columns: repeat(3, minmax(var(--cell-size), 1fr)); }
+        .elements-group.metals-group-4 { grid-template-columns: repeat(5, minmax(var(--cell-size), 1fr)); }
+        .elements-group.metals-group-5 { grid-template-columns: repeat(4, minmax(var(--cell-size), 1fr)); }
+        
+        .elements-group.nonmetals-group-1 { grid-template-columns: repeat(5, minmax(var(--cell-size), 1fr)); }
+        .elements-group.nonmetals-group-2 { grid-template-columns: repeat(4, minmax(var(--cell-size), 1fr)); }
+        .elements-group.nonmetals-group-3 { grid-template-columns: repeat(4, minmax(var(--cell-size), 1fr)); }
+        .elements-group.nonmetals-group-4 { grid-template-columns: repeat(4, minmax(var(--cell-size), 1fr)); }
 
         .valence-cell {
             background: var(--cell-bg);
@@ -274,14 +294,25 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
             .tables-container {
                 flex-direction: column;
                 gap: 20px;
             }
             
+            .table-section.metals,
+            .table-section.nonmetals {
+                flex: 1;
+            }
+            
             .elements-group {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .elements-group {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)) !important;
             }
             
             .valence-cell .sym {
@@ -295,7 +326,7 @@
 
         @media (max-width: 480px) {
             .elements-group {
-                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)) !important;
             }
             
             .valence-cell .sym {
@@ -317,7 +348,7 @@
 
     <div class="tables-container">
         <!-- Tabla de Metales -->
-        <div class="table-section">
+        <div class="table-section metals">
             <h2 class="section-title">METALAK</h2>
             <div class="valences-table" id="metalsTable">
                 <!-- Los grupos se generarán con JavaScript -->
@@ -325,7 +356,7 @@
         </div>
 
         <!-- Tabla de Ez-Metalak -->
-        <div class="table-section">
+        <div class="table-section nonmetals">
             <h2 class="section-title">EZ METALAK</h2>
             <div class="valences-table" id="nonmetalsTable">
                 <!-- Los grupos se generarán con JavaScript -->
@@ -416,10 +447,10 @@
         let allCells = [];
 
         // Función para crear grupos de elementos
-        function createGroups(groups, container) {
+        function createGroups(groups, container, type) {
             groups.forEach((group, index) => {
                 const groupDiv = document.createElement('div');
-                groupDiv.className = 'elements-group';
+                groupDiv.className = `elements-group ${type}-group-${index + 1}`;
                 
                 group.forEach(el => {
                     const cell = createCell(el);
@@ -478,10 +509,10 @@
         }
 
         // Crear grupos para metales
-        createGroups(metalGroups, metalsTable);
+        createGroups(metalGroups, metalsTable, 'metals');
 
         // Crear grupos para ez-metalak
-        createGroups(nonmetalGroups, nonmetalsTable);
+        createGroups(nonmetalGroups, nonmetalsTable, 'nonmetals');
 
         // Funcionalidad de búsqueda
         searchInput.addEventListener('input', function() {
