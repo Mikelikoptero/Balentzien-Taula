@@ -13,7 +13,7 @@
             --border-color: rgba(58,121,94,0.3);
             --cell-bg: rgba(30,30,30,0.8);
             --cell-width: 125px;
-            --cell-height: 105px;
+            --cell-height: 85px; /* Reducida de 105px */
             --gap-size: 8px;
         }
 
@@ -125,7 +125,7 @@
         .valence-cell {
             background: var(--cell-bg);
             border-radius: 6px;
-            padding: 8px 6px;
+            padding: 6px 4px; /* Reducido de 8px 6px */
             color: var(--text-color);
             display: flex;
             flex-direction: column;
@@ -138,11 +138,6 @@
             height: var(--cell-height);
             flex-shrink: 0;
             box-sizing: border-box;
-        }
-
-        .valence-cell .num {
-            font-size: 11px;
-            opacity: 0.85;
         }
 
         .valence-cell .sym {
@@ -172,7 +167,7 @@
             justify-content: center;
             gap: 4px;
             margin-top: 8px;
-            min-height: 25px;
+            min-height: 20px; /* Reducido de 25px */
             align-items: center;
         }
 
@@ -305,7 +300,7 @@
         @media (max-width: 768px) {
             .valence-cell {
                 width: 90px;
-                height: 110px;
+                height: 90px; /* Ajustado de 110px */
             }
             
             .valence-cell .sym {
@@ -325,7 +320,7 @@
         @media (max-width: 480px) {
             .valence-cell {
                 width: 80px;
-                height: 100px;
+                height: 80px; /* Ajustado de 100px */
             }
             
             .valence-cell .sym {
@@ -492,10 +487,7 @@
             }
             
             cell.innerHTML = `
-                <div style="display:flex;justify-content:space-between">
-                    <div class='num'>${el.z}</div>
-                </div>
-                <div style="text-align:center;margin-top:4px">
+                <div style="text-align:center">
                     <div class='sym'>${el.sym}</div>
                     <div class='ename'>${el.name}</div>
                 </div>
@@ -576,7 +568,3 @@
     </script>
 </body>
 </html>
-
-
-
-
