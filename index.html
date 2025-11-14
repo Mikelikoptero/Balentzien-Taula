@@ -22,39 +22,7 @@
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-        }
-        .header-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ecf0f1;
-        }
-        .search-container {
-            flex: 1;
-            text-align: center;
-        }
-        .search-box {
-            width: 400px;
-            padding: 10px 20px;
-            font-size: 1em;
-            border: 2px solid #27ae60;
-            border-radius: 25px;
-            outline: none;
-            transition: all 0.3s ease;
-            height: 45px;
-            background: white;
-            color: #333;
-        }
-        .search-box:focus {
-            border-color: #219652;
-            box-shadow: 0 0 8px rgba(39, 174, 96, 0.3);
-        }
-        .search-box::placeholder {
-            color: #95a5a6;
-            font-size: 0.95em;
+            padding: 20px;
         }
         .tables-container {
             display: flex;
@@ -77,10 +45,10 @@
             border: 1px solid #2ecc71;
         }
         .table-title {
-            padding: 8px 12px;
+            padding: 10px 15px;
             font-weight: bold;
             text-align: center;
-            font-size: 1.1em;
+            font-size: 1.2em;
         }
         .metalak-title {
             background-color: #e74c3c;
@@ -93,14 +61,14 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85em;
+            font-size: 0.9em;
         }
         th {
             background-color: #f8f9fa;
             color: #2c3e50;
-            padding: 8px 10px;
+            padding: 10px 12px;
             border-bottom: 1px solid #ecf0f1;
-            font-size: 0.9em;
+            font-size: 0.95em;
         }
         .elementua-header {
             text-align: left;
@@ -112,7 +80,7 @@
             text-align: center;
         }
         td {
-            padding: 6px 8px;
+            padding: 8px 10px;
             border-bottom: 1px solid #ecf0f1;
         }
         .element-symbol {
@@ -126,7 +94,7 @@
             vertical-align: middle;
             text-align: center;
             background-color: #f5f0fa;
-            font-size: 0.8em;
+            font-size: 0.85em;
         }
         .negative-valence {
             color: #e74c3c;
@@ -153,53 +121,15 @@
             border-bottom: 2px dashed #000000;
         }
         
-        /* NUEVOS ESTILOS MEJORADOS PARA RESALTADO - VERSIÓN VERDE */
-        .highlighted {
-            background-color: #d4edda !important;
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.8);
-            transform: scale(1.02);
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 10;
-        }
-        .highlighted td {
-            background-color: #d4edda !important;
-            font-weight: bold;
-            color: #155724;
-        }
-        .highlighted .element-symbol {
-            color: #155724;
-            font-weight: 900;
-            font-size: 1.1em;
-        }
-        .highlighted .valence {
-            background-color: #27ae60 !important;
-            color: white;
-            font-weight: 900;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .highlighted .negative-valence {
-            color: #c0392b;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        
         .footer {
             text-align: center;
             margin-top: 20px;
             color: #7f8c8d;
-            font-size: 0.8em;
-            padding-top: 10px;
+            font-size: 0.9em;
+            padding-top: 15px;
             border-top: 1px solid #ecf0f1;
         }
         @media (max-width: 768px) {
-            .header-controls {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .search-container {
-                width: 100%;
-            }
             .tables-container {
                 flex-direction: column;
                 gap: 15px;
@@ -208,25 +138,13 @@
                 font-size: 0.8em;
             }
             th, td {
-                padding: 5px 6px;
-            }
-            .search-box {
-                width: 100%;
-                font-size: 0.95em;
-                padding: 8px 16px;
-                height: 40px;
+                padding: 6px 8px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header-controls">
-            <div class="search-container">
-                <input type="text" id="searchInput" class="search-box" placeholder="Bilatu elementua edo sinboloa...">
-            </div>
-        </div>
-        
         <div class="tables-container">
             <div class="table-wrapper metalak-container">
                 <div class="table-title metalak-title">Metalak</div>
@@ -394,65 +312,5 @@
             <p>Elementuen Balentzia Taula - Kimika</p>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const allRows = document.querySelectorAll('.valence-group');
-            const allValenceCells = document.querySelectorAll('.valence[data-valence]');
-            
-            // Buscador
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase().trim();
-                
-                // Remover resaltado anterior
-                allRows.forEach(row => {
-                    row.classList.remove('highlighted');
-                });
-                allValenceCells.forEach(cell => {
-                    cell.classList.remove('highlighted');
-                });
-                
-                // Si el campo está vacío, no hacer nada
-                if (searchTerm === '') return;
-                
-                // Buscar y resaltar coincidencias
-                allRows.forEach(row => {
-                    const elementName = row.getAttribute('data-element').toLowerCase();
-                    const elementSymbol = row.getAttribute('data-symbol').toLowerCase();
-                    
-                    if (elementName.includes(searchTerm) || elementSymbol.includes(searchTerm)) {
-                        // Resaltar toda la fila
-                        row.classList.add('highlighted');
-                        
-                        // Encontrar la celda de valencia correcta usando el grupo de valencia
-                        const valenceGroup = row.getAttribute('data-valence-group');
-                        const valenceCell = findValenceCellByGroup(valenceGroup);
-                        if (valenceCell) {
-                            valenceCell.classList.add('highlighted');
-                        }
-                    }
-                });
-            });
-            
-            // Función para encontrar la celda de valencia por grupo
-            function findValenceCellByGroup(valenceGroup) {
-                return document.querySelector(`.valence[data-valence="${valenceGroup}"]`);
-            }
-            
-            // Limpiar búsqueda al hacer clic en cualquier parte
-            document.addEventListener('click', function(e) {
-                if (e.target !== searchInput) {
-                    searchInput.value = '';
-                    allRows.forEach(row => {
-                        row.classList.remove('highlighted');
-                    });
-                    allValenceCells.forEach(cell => {
-                        cell.classList.remove('highlighted');
-                    });
-                }
-            });
-        });
-    </script>
 </body>
 </html>
