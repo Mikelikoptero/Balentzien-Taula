@@ -3,562 +3,575 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balentzien Taula — Euskera</title>
+    <title>Elementuen Balentzia Taula</title>
     <style>
-        :root {
-            --bg: #0a0a0a;
-            --accent-color: #3A795E;
-            --text-color: #e6e6e6;
-            --text-muted: #cccccc;
-            --border-color: rgba(58,121,94,0.3);
-            --cell-bg: rgba(30,30,30,0.8);
-            --cell-width: 125px;
-            --cell-height: 85px;
-            --gap-size: 8px;
-            --zoom-level: 1;
-        }
-
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            margin: 0;
+            padding: 10px;
             min-height: 100vh;
+            transition: all 0.3s ease;
         }
-
-        .search-container {
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            position: relative;
-            z-index: 10;
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #ecf0f1;
         }
-
-        .search-box {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(30,30,30,0.8);
-            border: 1px solid var(--border-color);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
             border-radius: 10px;
-            color: var(--text-color);
-            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .container {
+            background-color: #2c3e50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        body.dark-mode .header-controls {
+            border-bottom-color: #34495e;
+        }
+        .search-container {
+            flex: 1;
+            text-align: center;
+        }
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            border: 2px solid #27ae60; /* BORDE VERDE */
+        }
+        body.dark-mode .dark-mode-toggle {
+            background: #34495e;
+            color: #bdc3c7;
+            border-color: #2ecc71; /* BORDE VERDE MÁS CLARO EN MODO OSCURO */
+        }
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #bdc3c7;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        body.dark-mode .toggle-switch {
+            background: #27ae60; /* VERDE EN MODO OSCURO */
+        }
+        body.dark-mode .toggle-switch::after {
+            left: 28px;
+        }
+        .search-box {
+            width: 400px;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: 2px solid #27ae60; /* BORDE VERDE */
+            border-radius: 25px;
             outline: none;
             transition: all 0.3s ease;
+            height: 45px;
+            background: white;
+            color: #333;
         }
-
+        body.dark-mode .search-box {
+            background: #34495e;
+            border-color: #2ecc71; /* BORDE VERDE MÁS CLARO EN MODO OSCURO */
+            color: #ecf0f1;
+        }
         .search-box:focus {
-            border-color: rgba(58,121,94,0.6);
-            box-shadow: 0 0 15px rgba(58,121,94,0.3);
-            transform: translateY(-2px);
+            border-color: #219652; /* VERDE MÁS OSCURO AL FOCUS */
+            box-shadow: 0 0 8px rgba(39, 174, 96, 0.3); /* SOMBRA VERDE */
         }
-
+        body.dark-mode .search-box:focus {
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.5); /* SOMBRA VERDE EN MODO OSCURO */
+        }
         .search-box::placeholder {
-            color: rgba(204,204,204,0.6);
-            font-size: 15px;
+            color: #95a5a6;
+            font-size: 0.95em;
         }
-
+        body.dark-mode .search-box::placeholder {
+            color: #7f8c8d;
+        }
         .tables-container {
             display: flex;
+            flex-wrap: wrap;
             gap: 20px;
-            max-width: 1600px;
-            margin: 0 auto;
-            transform: scale(var(--zoom-level));
-            transform-origin: top center;
-            transition: transform 0.2s ease;
-        }
-
-        .table-section {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .table-section.metals {
-            flex: 2;
-        }
-
-        .table-section.nonmetals {
-            flex: 1.2;
-        }
-
-        .section-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--accent-color);
-            text-align: center;
             margin-bottom: 20px;
-            padding: 10px;
-            border-bottom: 2px solid var(--border-color);
+            align-items: flex-start;
         }
-
-        .group-separator {
-            height: 1px;
-            background: rgba(58,121,94,0.3);
-            margin: 15px 0;
-            width: 100%;
-        }
-
-        /* Tabla de valencias */
-        .valences-table {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 15px;
-            background: linear-gradient(180deg, #111111, #151515);
+        .table-wrapper {
+            flex: 1;
+            min-width: 280px;
             border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            border: 1px solid rgba(58,121,94,0.2);
-            min-height: 350px;
-        }
-
-        .elements-group {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: var(--gap-size);
-            width: 100%;
-            justify-content: flex-start;
-        }
-
-        .valence-cell {
-            background: var(--cell-bg);
-            border-radius: 6px;
-            padding: 6px 4px;
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            font-size: 12px;
-            border: 1px solid rgba(58,121,94,0.1);
-            cursor: default;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            width: var(--cell-width);
-            height: var(--cell-height);
-            flex-shrink: 0;
-            box-sizing: border-box;
         }
-
-        .valence-cell .sym {
-            font-size: 24px;
-            font-weight: 400;
-            line-height: 1;
-            letter-spacing: -0.02em;
-            margin: 0;
-            display: block;
-            text-align: center;
+        body.dark-mode .table-wrapper {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
-
-        .valence-cell .ename {
-            font-size: 11px;
-            opacity: 0.95;
-            line-height: 1.05;
-            margin-top: 3px;
-            font-weight: 600;
-            font-stretch: condensed;
-            letter-spacing: -0.02em;
-            text-align: center;
+        .metalak-container {
+            border: 1px solid #e74c3c;
         }
-
-        .valence-cell .valences {
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: center;
-            gap: 4px;
-            margin-top: 8px;
-            min-height: 20px;
-            align-items: center;
+        .ez-metalak-container {
+            border: 1px solid #2ecc71;
         }
-
-        .valence {
-            background: rgba(58,121,94,0.2);
-            border-radius: 4px;
-            padding: 3px 6px;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-color);
-            min-width: 20px;
-            text-align: center;
-            line-height: 1.2;
-            white-space: nowrap;
-        }
-
-        .valence.positive {
-            background: rgba(58,121,94,0.4);
-        }
-
-        .valence.negative {
-            background: rgba(121,58,94,0.4);
-        }
-
-        .valence-cell:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 8px 24px rgba(58,121,94,0.4);
-            border-color: rgba(58,121,94,0.3);
-        }
-
-        .valence-cell.dimmed {
-            opacity: 0.3;
-            transform: scale(0.95);
-            filter: grayscale(0.7);
-        }
-
-        .valence-cell.search-match {
-            transform: scale(1.08);
-            box-shadow: 0 0 25px rgba(58,121,94,0.7);
-            z-index: 20;
-            border: 2px solid var(--accent-color);
-        }
-
-        .valence-cell.search-nomatch {
-            opacity: 0.2;
-            filter: grayscale(0.8);
-            transform: scale(0.9);
-        }
-
-        /* Controles de zoom */
-        .zoom-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(17,17,17,0.9);
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            gap: 8px;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(58,121,94,0.3);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-
-        .zoom-btn {
-            background: rgba(58,121,94,0.2);
-            border: none;
-            color: var(--text-color);
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 18px;
+        .table-title {
+            padding: 8px 12px;
             font-weight: bold;
-            transition: all 0.2s ease;
+            text-align: center;
+            font-size: 1.1em;
         }
-
-        .zoom-btn:hover {
-            background: rgba(58,121,94,0.4);
-            transform: scale(1.05);
+        .metalak-title {
+            background-color: #e74c3c;
+            color: white;
         }
-
-        .zoom-display {
-            color: var(--text-color);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            min-width: 60px;
-            justify-content: center;
-            font-weight: 600;
+        .ez-metalak-title {
+            background-color: #2ecc71;
+            color: white;
         }
-
-        /* Responsive */
-        @media (max-width: 1600px) {
-            .tables-container {
-                max-width: 1500px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 8px 10px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode th {
+            background-color: #34495e;
+            color: #ecf0f1;
+            border-bottom-color: #2c3e50;
+        }
+        .elementua-header {
+            text-align: left;
+        }
+        .sinboloa-header {
+            text-align: center;
+        }
+        .balentziak-header {
+            text-align: center;
+        }
+        td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #ecf0f1;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode td {
+            border-bottom-color: #2c3e50;
+            color: #ecf0f1;
+        }
+        .element-symbol {
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .element-symbol {
+            color: #ecf0f1;
+        }
+        .valence {
+            font-weight: bold;
+            color: #000000;
+            vertical-align: middle;
+            text-align: center;
+            background-color: #f5f0fa;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .valence {
+            background-color: #34495e;
+            color: #ecf0f1;
+        }
+        .negative-valence {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .valence-group {
+            background-color: #f5f0fa;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .valence-group {
+            background-color: #2c3e50;
+        }
+        
+        /* LÍNEAS CAMBIADAS: Negro en modo claro, Blanco en modo oscuro */
+        .group-start {
+            border-top: 2px solid #000000 !important; /* NEGRO en modo claro */
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .group-start {
+            border-top: 2px solid #ffffff !important; /* BLANCO en modo oscuro */
+        }
+        .last-group {
+            border-bottom: 2px solid #000000 !important; /* NEGRO en modo claro */
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .last-group {
+            border-bottom: 2px solid #ffffff !important; /* BLANCO en modo oscuro */
+        }
+        .subgroup-separator {
+            position: relative;
+        }
+        .subgroup-separator::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            border-bottom: 2px dashed #000000; /* NEGRO en modo claro */
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .subgroup-separator::after {
+            border-bottom: 2px dashed #ffffff; /* BLANCO en modo oscuro */
+        }
+        
+        /* Estilos para elementos resaltados - COLOR VERDE */
+        .highlighted {
+            background-color: #d4edda !important;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .highlighted {
+            background-color: #27ae60 !important;
+        }
+        .highlighted td {
+            background-color: #d4edda !important;
+            font-weight: bold;
+        }
+        body.dark-mode .highlighted td {
+            background-color: #27ae60 !important;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.8em;
+            padding-top: 10px;
+            border-top: 1px solid #ecf0f1;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .footer {
+            color: #95a5a6;
+            border-top-color: #34495e;
+        }
+        @media (max-width: 768px) {
+            .header-controls {
+                flex-direction: column;
+                gap: 15px;
             }
-        }
-
-        @media (max-width: 1200px) {
+            .search-container {
+                width: 100%;
+            }
             .tables-container {
                 flex-direction: column;
-                gap: 20px;
-                max-width: 1200px;
+                gap: 15px;
             }
-            
-            .table-section.metals,
-            .table-section.nonmetals {
-                flex: 1;
+            table {
+                font-size: 0.8em;
             }
-            
-            .elements-group {
-                flex-wrap: wrap;
-                justify-content: center;
+            th, td {
+                padding: 5px 6px;
             }
-        }
-
-        @media (max-width: 768px) {
-            .valence-cell {
-                width: 90px;
-                height: 90px;
-            }
-            
-            .valence-cell .sym {
-                font-size: 22px;
-            }
-            
-            .valence-cell .ename {
-                font-size: 10px;
-            }
-            
-            .valence {
-                font-size: 10px;
-                padding: 2px 5px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .valence-cell {
-                width: 80px;
-                height: 80px;
-            }
-            
-            .valence-cell .sym {
-                font-size: 20px;
-            }
-            
-            .valence-cell .ename {
-                font-size: 9px;
-            }
-            
-            .valence {
-                font-size: 9px;
-                padding: 2px 4px;
+            .search-box {
+                width: 100%;
+                font-size: 0.95em;
+                padding: 8px 16px;
+                height: 40px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="search-container">
-        <input type="text" class="search-box" id="searchInput" placeholder="Bilatu elementua... (izenaz edo sinboloaz)">
-    </div>
-
-    <div class="tables-container">
-        <!-- Tabla de Metales -->
-        <div class="table-section metals">
-            <h2 class="section-title">METALAK</h2>
-            <div class="valences-table" id="metalsTable">
-                <!-- Los grupos se generarán con JavaScript -->
+    <div class="container">
+        <div class="header-controls">
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-box" placeholder="Bilatu elementua edo sinboloa...">
+            </div>
+            <div class="dark-mode-toggle" id="darkModeToggle">
+                <span>Kolore ilunak</span> <!-- TEXTO CAMBIADO A EUSKERA -->
+                <div class="toggle-switch"></div>
             </div>
         </div>
-
-        <!-- Tabla de Ez-Metalak -->
-        <div class="table-section nonmetals">
-            <h2 class="section-title">EZ METALAK</h2>
-            <div class="valences-table" id="nonmetalsTable">
-                <!-- Los grupos se generarán con JavaScript -->
+        
+        <div class="tables-container">
+            <div class="table-wrapper metalak-container">
+                <div class="table-title metalak-title">Metalak</div>
+                <table id="metalak-table">
+                    <thead>
+                        <tr>
+                            <th class="elementua-header">Elementua</th>
+                            <th class="sinboloa-header">Sinboloa</th>
+                            <th class="balentziak-header">Balentziak</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Grupo +1 -->
+                        <tr class="valence-group group-start" data-element="Litio" data-symbol="Li" data-valence-group="+1">
+                            <td>Litio</td><td class="element-symbol">Li</td>
+                            <td class="valence" rowspan="7" data-valence="+1">+1</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Sodio" data-symbol="Na" data-valence-group="+1"><td>Sodio</td><td class="element-symbol">Na</td></tr>
+                        <tr class="valence-group" data-element="Potasio" data-symbol="K" data-valence-group="+1"><td>Potasio</td><td class="element-symbol">K</td></tr>
+                        <tr class="valence-group" data-element="Rubidio" data-symbol="Rb" data-valence-group="+1"><td>Rubidio</td><td class="element-symbol">Rb</td></tr>
+                        <tr class="valence-group" data-element="Zesio" data-symbol="Cs" data-valence-group="+1"><td>Zesio</td><td class="element-symbol">Cs</td></tr>
+                        <tr class="valence-group" data-element="Frantzio" data-symbol="Fr" data-valence-group="+1"><td>Frantzio</td><td class="element-symbol">Fr</td></tr>
+                        <tr class="valence-group" data-element="Zilar" data-symbol="Ag" data-valence-group="+1"><td>Zilar</td><td class="element-symbol">Ag</td></tr>
+                        
+                        <!-- Grupo +2 -->
+                        <tr class="valence-group group-start" data-element="Berilio" data-symbol="Be" data-valence-group="+2">
+                            <td>Berilio</td><td class="element-symbol">Be</td>
+                            <td class="valence" rowspan="8" data-valence="+2">+2</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Magnesio" data-symbol="Mg" data-valence-group="+2"><td>Magnesio</td><td class="element-symbol">Mg</td></tr>
+                        <tr class="valence-group" data-element="Kaltzio" data-symbol="Ca" data-valence-group="+2"><td>Kaltzio</td><td class="element-symbol">Ca</td></tr>
+                        <tr class="valence-group" data-element="Estrontzio" data-symbol="Sr" data-valence-group="+2"><td>Estrontzio</td><td class="element-symbol">Sr</td></tr>
+                        <tr class="valence-group" data-element="Bario" data-symbol="Ba" data-valence-group="+2"><td>Bario</td><td class="element-symbol">Ba</td></tr>
+                        <tr class="valence-group" data-element="Radio" data-symbol="Ra" data-valence-group="+2"><td>Radio</td><td class="element-symbol">Ra</td></tr>
+                        <tr class="valence-group" data-element="Zink" data-symbol="Zn" data-valence-group="+2"><td>Zink</td><td class="element-symbol">Zn</td></tr>
+                        <tr class="valence-group" data-element="Kadmio" data-symbol="Cd" data-valence-group="+2"><td>Kadmio</td><td class="element-symbol">Cd</td></tr>
+                        
+                        <!-- Grupo +1, +2 -->
+                        <tr class="valence-group group-start" data-element="Kobre" data-symbol="Cu" data-valence-group="+1,+2">
+                            <td>Kobre</td><td class="element-symbol">Cu</td>
+                            <td class="valence" rowspan="2" data-valence="+1,+2">+1, +2</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Merkurio" data-symbol="Hg" data-valence-group="+1,+2"><td>Merkurio</td><td class="element-symbol">Hg</td></tr>
+                        
+                        <!-- Grupo +1, +3 -->
+                        <tr class="valence-group group-start" data-element="Urrea" data-symbol="Au" data-valence-group="+1,+3">
+                            <td>Urrea</td><td class="element-symbol">Au</td>
+                            <td class="valence" data-valence="+1,+3">+1, +3</td>
+                        </tr>
+                        
+                        <!-- Grupo +2, +3 -->
+                        <tr class="valence-group group-start" data-element="Burdina" data-symbol="Fe" data-valence-group="+2,+3">
+                            <td>Burdina</td><td class="element-symbol">Fe</td>
+                            <td class="valence" rowspan="3" data-valence="+2,+3">+2, +3</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Kobalto" data-symbol="Co" data-valence-group="+2,+3"><td>Kobalto</td><td class="element-symbol">Co</td></tr>
+                        <tr class="valence-group" data-element="Nikel" data-symbol="Ni" data-valence-group="+2,+3"><td>Nikel</td><td class="element-symbol">Ni</td></tr>
+                        
+                        <!-- Grupo +2, +3, +6 -->
+                        <tr class="valence-group group-start" data-element="Kromo" data-symbol="Cr" data-valence-group="+2,+3,+6">
+                            <td>Kromo</td><td class="element-symbol">Cr</td>
+                            <td class="valence" data-valence="+2,+3,+6">+2, +3, +6</td>
+                        </tr>
+                        
+                        <!-- Grupo +2, +3, +4, +6, +7 -->
+                        <tr class="valence-group group-start" data-element="Manganeso" data-symbol="Mn" data-valence-group="+2,+3,+4,+6,+7">
+                            <td>Manganeso</td><td class="element-symbol">Mn</td>
+                            <td class="valence" data-valence="+2,+3,+4,+6,+7">+2, +3, +4, +6, +7</td>
+                        </tr>
+                        
+                        <!-- Grupo +3 -->
+                        <tr class="valence-group group-start" data-element="Aluminio" data-symbol="Al" data-valence-group="+3">
+                            <td>Aluminio</td><td class="element-symbol">Al</td>
+                            <td class="valence" data-valence="+3">+3</td>
+                        </tr>
+                        
+                        <!-- Grupo +2, +4 -->
+                        <tr class="valence-group group-start" data-element="Eztainu" data-symbol="Sn" data-valence-group="+2,+4">
+                            <td>Eztainu</td><td class="element-symbol">Sn</td>
+                            <td class="valence" rowspan="3" data-valence="+2,+4">+2, +4</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Beruna" data-symbol="Pb" data-valence-group="+2,+4"><td>Beruna</td><td class="element-symbol">Pb</td></tr>
+                        <tr class="valence-group last-group" data-element="Platino" data-symbol="Pt" data-valence-group="+2,+4"><td>Platino</td><td class="element-symbol">Pt</td></tr>
+                        
+                        <!-- Grupo +3, +5 -->
+                        <tr class="valence-group group-start" data-element="Bismuto" data-symbol="Bi" data-valence-group="+3,+5">
+                            <td>Bismuto</td><td class="element-symbol">Bi</td>
+                            <td class="valence" data-valence="+3,+5">+3, +5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-wrapper ez-metalak-container">
+                <div class="table-title ez-metalak-title">Ez-metalak</div>
+                <table id="ez-metalak-table">
+                    <thead>
+                        <tr>
+                            <th class="elementua-header">Elementua</th>
+                            <th class="sinboloa-header">Sinboloa</th>
+                            <th class="balentziak-header">Balentziak</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Grupo -1, +1 -->
+                        <tr class="valence-group group-start" data-element="Hidrogeno" data-symbol="H" data-valence-group="-1,+1">
+                            <td>Hidrogeno</td><td class="element-symbol">H</td>
+                            <td class="valence" data-valence="-1,+1"><span class="negative-valence">-1</span>, +1</td>
+                        </tr>
+                        
+                        <!-- Grupo Halogenoak -->
+                        <tr class="valence-group group-start subgroup-separator" data-element="Fluor" data-symbol="F" data-valence-group="-1">
+                            <td>Fluor</td><td class="element-symbol">F</td>
+                            <td class="valence" data-valence="-1"><span class="negative-valence">-1</span></td>
+                        </tr>
+                        <tr class="valence-group" data-element="Kloro" data-symbol="Cl" data-valence-group="-1,+1,+3,+5,+7"><td>Kloro</td><td class="element-symbol">Cl</td>
+                            <td class="valence" rowspan="3" data-valence="-1,+1,+3,+5,+7"><span class="negative-valence">-1</span>, +1, +3, +5, +7</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Bromo" data-symbol="Br" data-valence-group="-1,+1,+3,+5,+7"><td>Bromo</td><td class="element-symbol">Br</td></tr>
+                        <tr class="valence-group" data-element="Iodo" data-symbol="I" data-valence-group="-1,+1,+3,+5,+7"><td>Iodo</td><td class="element-symbol">I</td></tr>
+                        
+                        <!-- Grupo Kalkogenoak -->
+                        <tr class="valence-group group-start subgroup-separator" data-element="Oxigeno" data-symbol="O" data-valence-group="-2(-1)">
+                            <td>Oxigeno</td><td class="element-symbol">O</td>
+                            <td class="valence" data-valence="-2(-1)"><span class="negative-valence">-2</span> (<span class="negative-valence">-1</span>)</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Sufre" data-symbol="S" data-valence-group="-2,+4,+6"><td>Sufre</td><td class="element-symbol">S</td>
+                            <td class="valence" rowspan="3" data-valence="-2,+4,+6"><span class="negative-valence">-2</span>, +4, +6</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Selenio" data-symbol="Se" data-valence-group="-2,+4,+6"><td>Selenio</td><td class="element-symbol">Se</td></tr>
+                        <tr class="valence-group" data-element="Telurio" data-symbol="Te" data-valence-group="-2,+4,+6"><td>Telurio</td><td class="element-symbol">Te</td></tr>
+                        
+                        <!-- Grupo Nitrogenoideak -->
+                        <tr class="valence-group group-start subgroup-separator" data-element="Nitrogeno" data-symbol="N" data-valence-group="-3,1,3,5(2,4)">
+                            <td>Nitrogeno</td><td class="element-symbol">N</td>
+                            <td class="valence" data-valence="-3,1,3,5(2,4)"><span class="negative-valence">-3</span>, 1, 3, 5 (2,4)</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Fosforo" data-symbol="P" data-valence-group="-3,+3,+5"><td>Fosforo</td><td class="element-symbol">P</td>
+                            <td class="valence" rowspan="3" data-valence="-3,+3,+5"><span class="negative-valence">-3</span>, +3, +5</td>
+                        </tr>
+                        <tr class="valence-group" data-element="Artseniko" data-symbol="As" data-valence-group="-3,+3,+5"><td>Artseniko</td><td class="element-symbol">As</td></tr>
+                        <tr class="valence-group" data-element="Antimonio" data-symbol="Sb" data-valence-group="-3,+3,+5"><td>Antimonio</td><td class="element-symbol">Sb</td></tr>
+                        
+                        <!-- Grupo Tetragenoak -->
+                        <tr class="valence-group group-start subgroup-separator" data-element="Karbono" data-symbol="C" data-valence-group="-4,+2,+4">
+                            <td>Karbono</td><td class="element-symbol">C</td>
+                            <td class="valence" data-valence="-4,+2,+4"><span class="negative-valence">-4</span>, +2, +4</td>
+                        </tr>
+                        <tr class="valence-group last-group" data-element="Silizio" data-symbol="Si" data-valence-group="-4,+4">
+                            <td>Silizio</td><td class="element-symbol">Si</td>
+                            <td class="valence" data-valence="-4,+4"><span class="negative-valence">-4</span>, +4</td>
+                        </tr>
+                        
+                        <!-- Grupo +3 -->
+                        <tr class="valence-group group-start" data-element="Boro" data-symbol="B" data-valence-group="+3">
+                            <td>Boro</td><td class="element-symbol">B</td>
+                            <td class="valence" data-valence="+3">+3</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
-
-    <div class="zoom-controls">
-        <button class="zoom-btn" id="zoomOut">−</button>
-        <div class="zoom-display" id="zoomLevel">100%</div>
-        <button class="zoom-btn" id="zoomIn">+</button>
-        <button class="zoom-btn" id="zoomReset">↺</button>
+        
+        <div class="footer">
+            <p>Elementuen Balentzia Taula - Kimika</p>
+        </div>
     </div>
 
     <script>
-        // Datos de elementos organizados por grupos
-        const metalGroups = [
-            [
-                {z:3,sym:'Li',name:'Litioa',val:[1]},
-                {z:11,sym:'Na',name:'Sodioa',val:[1]},
-                {z:19,sym:'K',name:'Potasioa',val:[1]},
-                {z:37,sym:'Rb',name:'Rubidioa',val:[1]},
-                {z:55,sym:'Cs',name:'Zesioa',val:[1]},
-                {z:87,sym:'Fr',name:'Frantzioa',val:[1]},
-                {z:47,sym:'Ag',name:'Zilarra',val:[1]}
-            ],
-            [
-                {z:4,sym:'Be',name:'Berilioa',val:[2]},
-                {z:12,sym:'Mg',name:'Magnesioa',val:[2]},
-                {z:20,sym:'Ca',name:'Kaltzioa',val:[2]},
-                {z:38,sym:'Sr',name:'Estrontzioa',val:[2]},
-                {z:56,sym:'Ba',name:'Barioa',val:[2]},
-                {z:88,sym:'Ra',name:'Radioa',val:[2]},
-                {z:30,sym:'Zn',name:'Zinka',val:[2]},
-                {z:48,sym:'Cd',name:'Kadmioa',val:[2]}
-            ],
-            [
-                {z:29,sym:'Cu',name:'Kobrea',val:[1,2]},
-                {z:80,sym:'Hg',name:'Merkurioa',val:[1,2]},
-                {z:79,sym:'Au',name:'Urrea',val:[1,3]}
-            ],
-            [
-                {z:26,sym:'Fe',name:'Burdina',val:[2,3]},
-                {z:27,sym:'Co',name:'Kobaltoa',val:[2,3]},
-                {z:28,sym:'Ni',name:'Nikela',val:[2,3]},
-                {z:24,sym:'Cr',name:'Kromoa',val:[2,3,6]},
-                {z:25,sym:'Mn',name:'Manganesoa',val:[2,3,4,6,7]}
-            ],
-            [
-                {z:13,sym:'Al',name:'Aluminioa',val:[3]},
-                {z:50,sym:'Sn',name:'Eztainua',val:[2,4]},
-                {z:82,sym:'Pb',name:'Beruna',val:[2,4]},
-                {z:78,sym:'Pt',name:'Platinoa',val:[2,4]}
-            ]
-        ];
-
-        const nonmetalGroups = [
-            [
-                {z:1,sym:'H',name:'Hidrogenoa',val:[-1,1]}
-            ],
-            [
-                {z:9,sym:'F',name:'Fluorra',val:[-1]},
-                {z:17,sym:'Cl',name:'Kloroa',val:[-1,1,3,5,7]},
-                {z:35,sym:'Br',name:'Bromoa',val:[-1,1,3,5,7]},
-                {z:53,sym:'I',name:'Iodoa',val:[-1,1,3,5,7]}
-            ],
-            [
-                {z:8,sym:'O',name:'Oxigenoa',val:[-2,-1]},
-                {z:16,sym:'S',name:'Sufrea',val:[-2,2,4,6]},
-                {z:34,sym:'Se',name:'Selenioa',val:[-2,2,4,6]},
-                {z:52,sym:'Te',name:'Telurioa',val:[-2,2,4,6]}
-            ],
-            [
-                {z:7,sym:'N',name:'Nitrogenoa',val:[-3,1,3,5]},
-                {z:15,sym:'P',name:'Fosforoa',val:[-3,3,5]},
-                {z:33,sym:'As',name:'Artsenikoa',val:[-3,3,5]},
-                {z:51,sym:'Sb',name:'Antimonioa',val:[-3,3,5]}
-            ],
-            [
-                {z:6,sym:'C',name:'Karbonoa',val:[-4,2,4]},
-                {z:14,sym:'Si',name:'Silizioa',val:[-4,4]},
-                {z:5,sym:'B',name:'Boroa',val:[3]},
-                {z:83,sym:'Bi',name:'Bismutoa',val:[3,5]}
-            ]
-        ];
-
-        const metalsTable = document.getElementById('metalsTable');
-        const nonmetalsTable = document.getElementById('nonmetalsTable');
-        const searchInput = document.getElementById('searchInput');
-        let allCells = [];
-
-        // Función para crear grupos de elementos
-        function createGroups(groups, container) {
-            groups.forEach((group, index) => {
-                const groupDiv = document.createElement('div');
-                groupDiv.className = 'elements-group';
-                
-                group.forEach(el => {
-                    const cell = createCell(el);
-                    groupDiv.appendChild(cell);
-                });
-                
-                container.appendChild(groupDiv);
-                
-                // Añadir separador después de cada grupo excepto el último
-                if (index < groups.length - 1) {
-                    const separator = document.createElement('div');
-                    separator.className = 'group-separator';
-                    container.appendChild(separator);
-                }
-            });
-        }
-
-        // Función para crear celdas
-        function createCell(el) {
-            const cell = document.createElement('div');
-            cell.className = 'valence-cell';
-            cell.dataset.z = el.z;
-            cell.dataset.name = el.name.toLowerCase();
-            cell.dataset.sym = el.sym.toLowerCase();
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const allRows = document.querySelectorAll('.valence-group');
+            const allValenceCells = document.querySelectorAll('.valence[data-valence]');
+            const darkModeToggle = document.getElementById('darkModeToggle');
             
-            // Crear elementos de valencia
-            let valencesHTML = '';
-            if (el.val && el.val.length > 0) {
-                valencesHTML = '<div class="valences">';
-                el.val.forEach(val => {
-                    const valenceClass = val < 0 ? 'negative' : val === 0 ? '' : 'positive';
-                    valencesHTML += `<div class="valence ${valenceClass}">${val}</div>`;
-                });
-                valencesHTML += '</div>';
+            // Modo oscuro
+            darkModeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                // Guardar preferencia en localStorage
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+            });
+            
+            // Cargar preferencia de modo oscuro
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
             }
             
-            cell.innerHTML = `
-                <div style="text-align:center">
-                    <div class='sym'>${el.sym}</div>
-                    <div class='ename'>${el.name}</div>
-                </div>
-                ${valencesHTML}
-            `;
-            
-            // Eliminado el evento de clic para evitar la selección
-            allCells.push(cell);
-            return cell;
-        }
-
-        // Crear grupos para metales
-        createGroups(metalGroups, metalsTable);
-
-        // Crear grupos para ez-metalak
-        createGroups(nonmetalGroups, nonmetalsTable);
-
-        // Funcionalidad de búsqueda
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            
-            allCells.forEach(cell => {
-                const matches = cell.dataset.name.includes(searchTerm) ||
-                               cell.dataset.sym.includes(searchTerm);
+            // Buscador
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
                 
-                cell.classList.remove('search-match', 'search-nomatch');
+                // Remover resaltado anterior
+                allRows.forEach(row => {
+                    row.classList.remove('highlighted');
+                });
+                allValenceCells.forEach(cell => {
+                    cell.classList.remove('highlighted');
+                });
                 
-                if (searchTerm === '') {
-                    cell.style.opacity = '';
-                    cell.style.filter = '';
-                    cell.style.transform = '';
-                    cell.style.border = '';
-                } else if (matches) {
-                    cell.classList.add('search-match');
-                } else {
-                    cell.classList.add('search-nomatch');
+                // Si el campo está vacío, no hacer nada
+                if (searchTerm === '') return;
+                
+                // Buscar y resaltar coincidencias
+                allRows.forEach(row => {
+                    const elementName = row.getAttribute('data-element').toLowerCase();
+                    const elementSymbol = row.getAttribute('data-symbol').toLowerCase();
+                    
+                    if (elementName.includes(searchTerm) || elementSymbol.includes(searchTerm)) {
+                        // Resaltar toda la fila
+                        row.classList.add('highlighted');
+                        
+                        // Encontrar la celda de valencia correcta usando el grupo de valencia
+                        const valenceGroup = row.getAttribute('data-valence-group');
+                        const valenceCell = findValenceCellByGroup(valenceGroup);
+                        if (valenceCell) {
+                            valenceCell.classList.add('highlighted');
+                        }
+                    }
+                });
+            });
+            
+            // Función para encontrar la celda de valencia por grupo
+            function findValenceCellByGroup(valenceGroup) {
+                return document.querySelector(`.valence[data-valence="${valenceGroup}"]`);
+            }
+            
+            // Limpiar búsqueda al hacer clic en cualquier parte
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput) {
+                    searchInput.value = '';
+                    allRows.forEach(row => {
+                        row.classList.remove('highlighted');
+                    });
+                    allValenceCells.forEach(cell => {
+                        cell.classList.remove('highlighted');
+                    });
                 }
             });
         });
-
-        // Funcionalidad de zoom
-        let zoomLevel = 1;
-        const minZoom = 0.5;
-        const maxZoom = 2;
-        const zoomStep = 0.1;
-
-        function updateZoom() {
-            document.documentElement.style.setProperty('--zoom-level', zoomLevel);
-            document.querySelector('.tables-container').style.transform = `scale(${zoomLevel})`;
-            document.getElementById('zoomLevel').textContent = Math.round(zoomLevel * 100) + '%';
-        }
-
-        document.getElementById('zoomIn').addEventListener('click', () => {
-            if (zoomLevel < maxZoom) {
-                zoomLevel += zoomStep;
-                updateZoom();
-            }
-        });
-
-        document.getElementById('zoomOut').addEventListener('click', () => {
-            if (zoomLevel > minZoom) {
-                zoomLevel -= zoomStep;
-                updateZoom();
-            }
-        });
-
-        document.getElementById('zoomReset').addEventListener('click', () => {
-            zoomLevel = 1;
-            updateZoom();
-        });
-
-        // Inicializar zoom
-        updateZoom();
     </script>
 </body>
 </html>
